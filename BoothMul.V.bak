@@ -1,0 +1,44 @@
+module BoothMul (
+    input wire [31:0] M,  // Multiplicand
+    input wire [31:0] Q,  // Multiplier
+    output wire [63:0] P  // Product (64-bit)
+);
+
+    reg [31:0] A;         // Accumulator
+    reg [31:0] Q_reg;     // Multiplier register
+    reg Q_minus_1;        // Extra bit for pairwise checking
+    integer i;            // Loop counter
+
+    // Initialize registers
+    initial begin
+        A = 32'b0;
+        Q_reg = Q;
+        Q_minus_1 = 1'b0;
+    end
+
+    // Booth's Algorithm
+    always @(*) begin
+        for (i = 0; i < 32; i = i + 1) begin
+            case ({Q_reg[0], Q_minus_1})
+                2'b00, 2'b11: begin
+                    // No operation, just shift
+                    {A, Q_reg, Q_minus_1} = {A[31], A, Q_reg}; // Arithmetic right shift
+                end
+                2'b01: begin
+                    // Add M to A, then shift
+                    A = A + M;
+                    {A, Q_reg, Q_minus_1} = {A[31], A, Q_reg}; // Arithmetic right shift
+                end
+                2'b10: begin
+                    // Subtract M from A, then shift
+                    A = A - M;
+                    {A, Q_reg, Q_minus_1} = {A[31], A, Q_reg}; // Arithmetic right shift
+                end
+            endcase
+        end
+    end
+
+    // Output the product
+    assign P = {A, Q_reg};
+
+endmodule

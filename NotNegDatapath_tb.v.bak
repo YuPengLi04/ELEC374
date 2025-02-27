@@ -1,0 +1,84 @@
+`timescale 1ns/10ps
+module AddSubDatapath_tb;
+  reg PCout, Zlowout, MDRout, R0out, R5out;
+  reg MARin, Zin, PCin, MDRin, IRin;
+  reg IncPC, Read, NEG, R0in, R5in; //Change "NEG" with "NOT"
+  reg clock;
+  reg [31:0] Mdatain;
+
+  parameter  Default = 4'b0000, Reg_load1a = 4'b0001, Reg_load1b = 4'b0010, Reg_load2a = 4'b0011,
+                       Reg_load2b = 4'b0100, T0 = 4'b0101, T1 = 4'b0110, T2 = 4'b0111,
+                       T3 = 4'b1000, T4 = 4'b1001;
+  reg [3:0] Present_state = Default;
+
+  Datapath DUT(PCout, Zlowout, MDRout, R0out, R5out, MARin, Zin, PCin, MDRin, IRin, IncPC, Read, NEG, R0in,
+               R5in, clock, Mdatain); //Change "ROR" with "ROL"
+
+initial
+ begin
+  clock = 0;
+  forever #10 clock = ~clock;
+end
+
+always@(posedge clock)
+  begin
+    case(Present_state)
+      Default : Present_state = Reg_load1a;
+      Reg_load1a : Present_state = Reg_load1b;
+      Reg_load1b : Present_state = Reg_load2a;
+      Reg_load2a : Present_state = Reg_load2b;
+      Reg_load2b : Present_state = T0;
+      T0 : Present_state = T1;
+      T1 : Present_state = T2;
+      T2 : Present_state = T3;
+      T3 : Present_state = T4;
+    endcase
+  end
+  
+always@(Present_state)
+  begin
+    case(Present_state)
+      Default: begin
+                    PCout<=0; Zlowout<=0; MDRout<=0;
+                    R0out<=0; R5out<=0; MARin<=0; Zin<=0;
+                    PCin<=0; MDRin<=0; IRin<=0; Yin<=0;
+                    IncPC<=0; Read<=0; NEG<=0; //change "NEG" with "NOT"
+                    R0in<=0; R5in<=0; Mdatain<=32'h00000000;
+      end
+      Reg_load1a: begin
+                    Mdatain<=32'h00000000;
+                    Read=0; MDRin=0;
+                    Read<=1; MDRin<=1;
+                    #15 Read<=0; MDRin<=0;
+      end
+      Reg_load1b: begin
+                    MDRout<=1; R0in<=1;
+                    #15 MDRout<=0; R0in<=0; // initialize R0 with value 0x0
+      end
+      Reg_load2a: begin
+                    Mdata<=32'h000000024;
+                    Read<=1; MDRin<=1;
+                    #15 Read<=0; MDRin<=0;
+      end
+      Reg_load2b: begin
+                    MDRout<=1; R5in<=0;
+                    #15 MDRout<=0; R5in<=0: //initialize R5 with value 0x24
+      end
+      T0: begin
+                    PCout<=1; MARin<=1; IncPC<=1; Zin<=1;
+      end
+      T1: begin
+                    Zlowout<=1; PCin<=1; Read<=1; MDRin<=1;
+      end
+      T2: begin
+                    MDRout<=1; IRin<=1;
+      end
+      T3: begin
+                    R0out<=1; NEG<=1; Zin<=1; //replace "NEG" with "NOT" on this line
+      end
+      T4: begin
+                    Zlowout<=1; R5out<=1;
+      end
+    endcase
+  end
+endmodule
