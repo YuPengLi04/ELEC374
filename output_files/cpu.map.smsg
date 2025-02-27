@@ -1,0 +1,6 @@
+Warning (10268): Verilog HDL information at ShiftDatapath_tb.v(52): always construct contains both blocking and non-blocking assignments File: C:/Users/21ypl1/Downloads/ELEC374-main/ELEC374-main/ShiftDatapath_tb.v Line: 52
+Warning (10268): Verilog HDL information at RotateDatapath_tb.v(52): always construct contains both blocking and non-blocking assignments File: C:/Users/21ypl1/Downloads/ELEC374-main/ELEC374-main/RotateDatapath_tb.v Line: 52
+Warning (10268): Verilog HDL information at NotNegDatapath_tb.v(48): always construct contains both blocking and non-blocking assignments File: C:/Users/21ypl1/Downloads/ELEC374-main/ELEC374-main/NotNegDatapath_tb.v Line: 48
+Warning (10268): Verilog HDL information at MulDivDatapath_tb.v(51): always construct contains both blocking and non-blocking assignments File: C:/Users/21ypl1/Downloads/ELEC374-main/ELEC374-main/MulDivDatapath_tb.v Line: 51
+Warning (10268): Verilog HDL information at AndOrDatapath_tb.v(54): always construct contains both blocking and non-blocking assignments File: C:/Users/21ypl1/Downloads/ELEC374-main/ELEC374-main/AndOrDatapath_tb.v Line: 54
+Warning (10268): Verilog HDL information at AddSubDatapath_tb.v(52): always construct contains both blocking and non-blocking assignments File: C:/Users/21ypl1/Downloads/ELEC374-main/ELEC374-main/AddSubDatapath_tb.v Line: 52
